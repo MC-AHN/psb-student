@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { serve } from "@hono/node-server";
-import { serveStatic } from "hono/serve-static";
+import { serveStatic } from "@hono/node-server/serve-static";
 import { z } from "zod";
 import { db } from "../db/index.js";
 import 'dotenv/config'; 
@@ -9,7 +9,6 @@ import { setCookie, getCookie, deleteCookie } from "hono/cookie";
 import { sign, verify } from "hono/jwt";
 import { admins } from "../db/schema.js";
 import { eq } from "drizzle-orm"; 
-import { ca } from "zod/locales";
 
 const app = new Hono();
 
@@ -79,7 +78,7 @@ app.get("/api/admin/students", async (c) => {
         return c.json({ error: "Invalid token" }, 401);
     }
 });
-
+ 
 app.get("/api/logout", (c) => {
     deleteCookie(c, "token");
     return c.json({ message: "Logged out successfully" });
