@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Welcome to the PSB Student Management System</h1>
+    <form action="/api/submit" method="post">
+        <input type="text" name="name" placeholder="Student Name" required>
+        <select name="gender" required>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+        <input type="number" name="memorize" placeholder="Memorize Score" required>
+        <input type="text" name="parent" placeholder="Parent Name" required>
+        <div class="g-recaptcha" data-sitekey="${process.env.RECAPTCHA_SITE_KEY}"></div>
+        <script src="https://www.google.com/recaptcha/api.js"></script>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
