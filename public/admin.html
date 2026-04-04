@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin PSB</title>
+</head>
+
+<body>
+    <div id="loginArea">
+        <h2>Login Admin</h2>
+        <input type="text" id="user" placeholder="Username">
+        <br><br>
+        <input type="password" id="pass" placeholder="Password">
+        <br><br>
+        <button onclick="login()">Submit</button>
+    </div>
+
+    <div id="adminContent" style="display: none;">
+        <h2>Data Register Student</h2>
+        <button onclick="logout()">Logout</button>
+
+        <hr>
+
+        <table border="1" cellpadding="10" id="studentTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Memorize</th>
+                    <th>Wali</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        async function login() {
+            const formData = new FormData();
+            formData.append('username', document.getElementById('user').value);
+            formData.append('password', document.getElementById('pass').value);
+
+            const res = await fetch('/api/login', { method: 'POST', body: formData});
+            if (res.ok) {
+                checkAuth();
+            } else {
+                alert('Login Failed!');
+            }
+        }
+
+        async function checkAuth() {
+            const res = await fetch('/api/admin/student');
+            if (res.ok) {
+                const data = await res.json();
+                document.getElementById('loginArea').style.display = 'none';
+                document.getElementById('adminContent').style.display = 'block';
+
+                const tbody = document.querySelector('#studentTable tbody');
+                tbody.innerHTML = data.map(s => `
+                    <tr>
+                        <td>${s.name}</td>
+                        <td>${s.gender}</td>
+                        <td>${s.memorize}</td>
+                        <td>${s.wali}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        async function logout() {
+            await fetch('/api/logout');
+            location.reload();
+        }
+
+        checkAuth();
+    </script>
+</body>
+
+</html>
