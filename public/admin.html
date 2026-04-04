@@ -51,7 +51,7 @@
         }
 
         async function checkAuth() {
-            const res = await fetch('/api/admin/student');
+            const res = await fetch('/api/admin/students');
             if (res.ok) {
                 const data = await res.json();
                 document.getElementById('loginArea').style.display = 'none';
