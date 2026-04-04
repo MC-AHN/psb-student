@@ -64,8 +64,8 @@ app.post("/api/login", async (c) => {
     const [user] = await db.select().from(admins).where(eq(admins.username, username));
     
     if (user && await bcrypt.compare(password, user.password)) {
-        const token = await sign({ user: user.username }, SECRET);
-        setCookie(c, "token", token, { httpOnly: true, secure: true });
+        const token = await sign({ user: user.username, exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 }, SECRET);
+        setCookie(c, "token", token, { httpOnly: true, secure: true, sameSite: 'Lax' });
         return c.json({ message: "Login successful" });
     }
     return c.json({ error: "Invalid credentials" }, 401);
@@ -79,8 +79,8 @@ app.get("/api/admin/students", async (c) => {
 
     try {
         await verify(token, SECRET);
-        const students = await db.select().from(db.students);
-        return c.json({ students });
+        const data = await db.select().from(students);
+        return c.json({ data });
     } catch (err) {
         return c.json({ error: "Invalid token" }, 401);
     }
