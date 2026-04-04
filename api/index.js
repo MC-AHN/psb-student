@@ -11,10 +11,8 @@ import { admins, students } from "../db/schema.js";
 import { eq } from "drizzle-orm"; 
 
 const app = new Hono();
-
 const SECRET = process.env.JWT_SECRET;
 
-app.use("/*", serveStatic({ root: "./public" }));
 
 app.get("/api/hello", (c) => {
     return c.json({ message: "PSB Student Management System" });
@@ -64,7 +62,7 @@ app.post("/api/submit", async (c) => {
 app.post("/api/login", async (c) => {
     const { username, password } = await c.req.parseBody();
     const [user] = await db.select().from(admins).where(eq(admins.username, username));
-
+    
     if (user && await bcrypt.compare(password, user.password)) {
         const token = await sign({ user: user.username }, SECRET);
         setCookie(c, "token", token, { httpOnly: true, secure: true });
@@ -93,5 +91,6 @@ app.get("/api/logout", (c) => {
     return c.json({ message: "Logged out successfully" });
 });
 
+app.use("/*", serveStatic({ root: "./public" }));
 serve({ fetch: app.fetch, port: 8000 });
-export default app.fetch;
+export default app;
