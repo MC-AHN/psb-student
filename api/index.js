@@ -73,6 +73,7 @@ app.post("/api/login", async (c) => {
 
 app.get("/api/admin/students", async (c) => {
     const token = getCookie(c, "token");
+    console.log('ini si token:',token)
     if (!token) {
         return c.json({ error: "Unauthorized" }, 401);
     }
