@@ -36,7 +36,16 @@ app.post("/api/submit", async (c) => {
         return c.json({ error: parse.error.errors.map(e => e.message).join(", ") }, 400);
     }
 
-    const vertify = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET}&response=${body['g-recaptcha-response']}`,)
+    const fromData = new URLSearchParams();
+    fromData.append('secret', process.env.RECAPTCHA_SECRET);
+    fromData.append('response', parse.data['g-recaptcha-response']);
+
+    const vertify = await fetch(`https://www.google.com/recaptcha/api/siteverify`, {
+        method: 'POST',
+        body: fromData,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    });
+
     const captchaRes = await vertify.json();
     if (!captchaRes.success) {
         return c.json({ error: "reCAPTCHA verification failed" }, 400);
