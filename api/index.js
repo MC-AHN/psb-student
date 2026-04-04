@@ -7,7 +7,7 @@ import 'dotenv/config';
 import bcrypt from "bcryptjs";
 import { setCookie, getCookie, deleteCookie } from "hono/cookie";
 import { sign, verify } from "hono/jwt";
-import { admins } from "../db/schema.js";
+import { admins, students } from "../db/schema.js";
 import { eq } from "drizzle-orm"; 
 
 const app = new Hono();
@@ -24,7 +24,7 @@ app.post("/api/submit", async (c) => {
     const body = await c.req.parseBody();
 
     const schema = z.object({
-        name: z.string().min(3),
+        name: z.string().min(3, "name minimal 3 charater"),
         gender: z.enum(["male", "female"]),
         memorize: z.coerce.number(),
         parent: z.string().min(3),
@@ -51,7 +51,7 @@ app.post("/api/submit", async (c) => {
         return c.json({ error: "reCAPTCHA verification failed" }, 400);
     }
 
-    await db.insert(db.students).values({
+    await db.insert(students).values({
         name: parse.data.name,
         gender: parse.data.gender,
         memorize: parse.data.memorize,
