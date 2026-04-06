@@ -82,7 +82,7 @@ app.get("/api/admin/students", async (c) => {
     try {
         await verify(token, SECRET, "HS256");
         const data = await db.select().from(students);
-        return c.json({ data });
+        return c.json( data );
     } catch (err) {
         return c.json({ error: `Invalid token: ${err}`}, 401);
     }
