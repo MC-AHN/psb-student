@@ -23,7 +23,7 @@ app.post("/api/submit", async (c) => {
 
     const schema = z.object({
         name: z.string().min(3, "name minimal 3 charater"),
-        gender: z.enum(["male"]),
+        gender: z.enum(["male", "female"]),
         memorize: z.coerce.number(),
         parent: z.string().min(3),
         'g-recaptcha-response': z.string().min(1, "Please complete the reCAPTCHA")
@@ -32,6 +32,10 @@ app.post("/api/submit", async (c) => {
     const parse = schema.safeParse(body);
     if (!parse.success) {
         return c.json({ error: parse.error.errors.map(e => e.message).join(", ") }, 400);
+    }
+
+    if (parse.gender == "female") {
+        return c.json({ error: "Gender not avilable"}, 400);
     }
 
     const fromData = new URLSearchParams();

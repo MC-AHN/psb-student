@@ -49,6 +49,7 @@
                     form.reset();
                     grecaptcha.reset();
                 } else {
+                    alert(result.error);
                     statusPesan.innerText = "Failed: " + (result.error || "error");
                     statusPesan.style.color = "red"; 
                 }
