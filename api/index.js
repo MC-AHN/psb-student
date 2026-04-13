@@ -23,7 +23,7 @@ app.post("/api/submit", async (c) => {
 
     const schema = z.object({
         name: z.string().min(3, "name minimal 3 charater"),
-        gender: z.enum(["male", "female"]),
+        gender: z.enum("male"),
         memorize: z.coerce.number(),
         parent: z.string().min(3),
         'g-recaptcha-response': z.string().min(1, "Please complete the reCAPTCHA")
