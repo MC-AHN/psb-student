@@ -34,7 +34,7 @@ app.post("/api/submit", async (c) => {
         return c.json({ error: parse.error.errors.map(e => e.message).join(", ") }, 400);
     }
 
-    if (parse.gender == "female") {
+    if (parse.data.gender == "female") {
         return c.json({ error: "Gender not avilable"}, 400);
     }
 
